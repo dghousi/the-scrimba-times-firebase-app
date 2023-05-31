@@ -3,28 +3,49 @@ import {
   getDatabase,
   ref,
   onValue,
+  push,
+  remove,
 } from 'https://www.gstatic.com/firebasejs/9.15.0/firebase-database.js'
 
 const appSettings = {
   databaseURL:
-    'https://playground-eaa33-default-rtdb.europe-west1.firebasedatabase.app/',
+    'https://stories-de7c7-default-rtdb.asia-southeast1.firebasedatabase.app/',
 }
 
 const app = initializeApp(appSettings)
 const database = getDatabase(app)
-const newsStoriesInDB = ref(database, 'newsStories')
+const newsStoriesInDB = ref(database, 'stories')
 
 const storiesEl = document.getElementById('stories')
+const submitBtnEl = document.getElementById('submitBtn')
+const storyInputEl = document.getElementById('storyInput')
+
+submitBtnEl.addEventListener('click', e => {
+  e.preventDefault()
+  let story = storyInputEl.value
+
+  if (story.length === 0) {
+    return
+  }
+
+  push(newsStoriesInDB, story)
+
+  storyInputEl.value = ''
+})
 
 onValue(newsStoriesInDB, function (snapshot) {
-  let newsStoriesArray = Object.entries(snapshot.val())
+  if (snapshot.exists()) {
+    let newsStoriesArray = Object.entries(snapshot.val())
 
-  storiesEl.innerHTML = ''
+    storiesEl.innerHTML = ''
 
-  for (let i = 0; i < newsStoriesArray.length; i++) {
-    let currentStory = newsStoriesArray[i]
+    for (let i = 0; i < newsStoriesArray.length; i++) {
+      let currentStory = newsStoriesArray[i]
 
-    appendStoryToStoriesEl(currentStory)
+      appendStoryToStoriesEl(currentStory)
+    }
+  } else {
+    storiesEl.innerHTML = 'No item are found'
   }
 })
 
@@ -37,7 +58,19 @@ function appendStoryToStoriesEl(story) {
 
   newEl.textContent = storyTitle
 
-  newEl.addEventListener('dblclick', function () {})
+  newEl.addEventListener('dblclick', function () {
+    let exactLocationOfStoryInDB = ref(database, `stories/${storyID}`)
+
+    remove(exactLocationOfStoryInDB)
+  })
 
   storiesEl.append(newEl)
+}
+
+function displayMessage() {
+  let displayMessageEl = document.createElement('span')
+
+  displayMessageEl.textContent = 'Item removed successfully.!'
+
+  document.getElementById('alertMessage').append(displayMessageEl)
 }

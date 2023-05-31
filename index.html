@@ -13,7 +13,18 @@
   <body>
     <div class="container">
       <h1>The Scrimba Times</h1>
-      <div id="stories"></div>
+      <div id="alertMessage"></div>
+      <div class="stories mb-10">
+        <textarea
+          id="storyInput"
+          cols="50"
+          rows="2"
+          placeholder="Type a story"
+          class="story_description"
+        ></textarea>
+        <button class="story" id="submitBtn">Submit</button>
+      </div>
+      <div class="stories" id="stories"></div>
     </div>
     <script src="index.js" type="module"></script>
   </body>

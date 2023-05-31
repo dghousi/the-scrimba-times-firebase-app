@@ -10,7 +10,7 @@ h1 {
   text-align: center;
 }
 
-#stories {
+.stories {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -30,4 +30,8 @@ h1 {
   cursor: pointer;
   background-color: #fc4103;
   color: #fff;
+}
+
+.mb-10 {
+  margin-bottom: 10px;
 }
